@@ -1,0 +1,48 @@
+c++的实现代码
+#include <iostream>
+#include <unordered_map>
+#include <string>
+
+using namespace std;
+
+struct TrieNode {
+    // 关键变化：不再是固定长度数组，而是字符到节点指针的映射
+    unordered_map<char, TrieNode*> children;
+    bool isEnd;
+
+    TrieNode() : isEnd(false) {} // 构造函数变简单了，不需要初始化 26 个 NULL
+};
+
+class Trie {
+private:
+    TrieNode* root;
+
+public:
+    Trie() {
+        root = new TrieNode();
+    }
+
+    void insert(string word) {
+        TrieNode* node = root;
+        for (char c : word) {
+            // 如果 map 里没有这个字符，就新建一个节点
+            if (node->children.find(c) == node->children.end()) {
+                node->children[c] = new TrieNode();
+            }
+            // 移动游标 node 到子节点
+            node = node->children[c];
+        }
+        node->isEnd = true;
+    }
+
+    bool search(string word) {
+        TrieNode* node = root;
+        for (char c : word) {
+            if (node->children.find(c) == node->children.end()) {
+                return false;
+            }
+            node = node->children[c];
+        }
+        return node->isEnd;
+    }
+};
