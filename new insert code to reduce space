@@ -1,0 +1,18 @@
+void insert(string word) {
+    TrieNode* curr = root;
+    for (char c : word) {
+        // try_emplace 是 C++17 的神技：
+        // 如果 c 不存在，它就原地创建一个 new TrieNode()
+        // 如果 c 已存在，它什么都不做，直接返回指向该位置的迭代器
+        auto [it, inserted] = curr->children.try_emplace(c, nullptr);
+        
+        // 如果是新插入的（原本是 nullptr），我们需要真正分配内存
+        if (inserted) {
+            it->second = new TrieNode();
+        }
+        
+        // it->second 就是我们要找的子节点指针，这里完全没有第二次哈希查找
+        curr = it->second;
+    }
+    curr->isEnd = true;
+}
