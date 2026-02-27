@@ -1,0 +1,61 @@
+struct treenode {
+    treenode* child[26];
+    bool isend;
+    treenode() {
+        isend = false;
+        for (int i = 0; i < 26; i++) {
+            child[i] = nullptr;
+        }
+    }
+}; 
+class Trie {
+private:
+    treenode* root;
+
+public:
+    Trie() { root = new treenode(); }
+
+    void insert(string word) {
+        treenode* tre = root;
+        for (char c : word) {
+            int index = c - 'a';
+            if (tre->child[index] == nullptr) {
+               tre->child[index]=new treenode();
+            }
+            tre=tre->child[index];
+        }
+        tre->isend=true;
+    }
+
+    bool search(string word) {
+        treenode*tre=root;
+        for(char c:word){
+            int index=c-'a';
+            if(tre->child[index]==nullptr){
+                return false;
+            }
+            tre=tre->child[index];
+        }
+        return tre->isend;
+    }
+
+    bool startsWith(string prefix) {
+        treenode*tre=root;
+        for(char c:prefix){
+            int index=c-'a';
+            if(tre->child[index]==nullptr){
+                return false;
+            }
+            tre=tre->child[index];
+        }
+        return true;
+    }
+};
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * Trie* obj = new Trie();
+ * obj->insert(word);
+ * bool param_2 = obj->search(word);
+ * bool param_3 = obj->startsWith(prefix);
+ */
